@@ -144,9 +144,20 @@ ENV \
     MESON='/usr/local/bin/meson' \
     NINJA='/usr/local/bin/ninja'
 
-ENTRYPOINT ["/bin/bash"]
 ### checks ###
 # no root-owned files in the home directory
 RUN notOwnedFile=$(find . -not "(" -user gitpod -and -group gitpod ")" -print -quit) \
     && { [ -z "$notOwnedFile" ] \
         || { echo "Error: not all files/dirs in $HOME are owned by 'gitpod' user & group"; exit 1; } }
+
+# Give back control
+USER root
+
+ENV \
+    PKG_CONFIG="/usr/bin/pkg-config" \
+    SOURCEFORGE_MIRROR="netix" \
+    PATH="/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    JQ="/usr/bin/jq" \
+    CMAKE='/usr/local/bin/cmake' \
+    MESON='/usr/local/bin/meson' \
+    NINJA='/usr/local/bin/ninja'
