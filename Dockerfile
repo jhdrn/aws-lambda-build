@@ -46,16 +46,6 @@ RUN mkdir -p /tmp/cmake \
  && make \
  && make install
 
-# Setup my dotfiles.
-RUN /usr/bin/git clone --bare --recurse-submodules -j8 https://github.com/bubba-h57/dotfiles.git /root/.dotfiles \
- && /usr/bin/git --git-dir=/root/.dotfiles/ --work-tree=/root checkout \
- && /usr/bin/git --git-dir=/root/.dotfiles/ --work-tree=/root submodule update --recursive \
- && /usr/bin/git --git-dir=/root/.dotfiles/ --work-tree=/root config status.showUntrackedFiles no
-
-# Install neovim
-ADD https://github.com/neovim/neovim/releases/download/v0.3.1/nvim.appimage /root
-RUN chmod 755 /root/nvim.appimage && /root/nvim.appimage --appimage-extract && ln -s /root/squashfs-root/usr/bin/nvim /usr/local/bin/nvim && /usr/local/bin/nvim +'PlugInstall --sync' +qall &> /dev/null
-
 # Set some sane environment variables for ourselves
 ENV \
     PKG_CONFIG="/usr/bin/pkg-config" \
